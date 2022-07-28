@@ -1,0 +1,19 @@
+POST http://localhost:3001/register
+Content-Type: application/json
+
+{
+    "first_name": "Gokul",
+    "last_name": "p r",
+    "email": "gokulpr47@gmail.com",
+    "password": "23416823"
+}
+
+###
+
+POST http://localhost:3001/login
+Content-Type: application/json
+
+{
+    "email": "gokulpr47@gmail.com",
+    "password": "23416823"
+}
