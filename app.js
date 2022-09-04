@@ -1,15 +1,25 @@
+const http = require('http');
+const express = require('express')
 require('dotenv').config();
 require('./config/database').connect();
-const express = require('express');
-const user = require('./model/user');
-const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
 const cors = require("cors");
-
+const socket = require('socket.io')
 const app = express();
+const server = http.createServer(app);
+const io = socket(server)
+const cookieParser = require('cookie-parser');
+const credentials = require('./middleware/credentials');
+const verifyJWT = require('./middleware/verifyJWT');
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
+
+//middleware for cookies
+app.use(cookieParser());
+
+// Handle options credentials check - before CORS!
+// and fetch cookies credentials requirement
+app.use(credentials);
 
 app.use(
     cors({
@@ -17,101 +27,38 @@ app.use(
       credentials: true,
       methods: ["GET", "POST"],
     })
-  );
+);
+  
+const userRoute = require('./routes/user')
+const registerRoute = require('./routes/register')
+const logoutRoute = require('./routes/logout')
+const refreshRoute = require('./routes/refresh')
+const serverRoute = require('./routes/api/server')
+const channelRoute = require('./routes/channel')
+const joinServerRoute = require('./routes/joinServer')
 
-//importing user context
-const User = require('./model/user'); 
+app.use('/signin', userRoute)
+app.use('/signup', registerRoute)
+app.use('/logout', logoutRoute)
+app.use('/refresh', refreshRoute)
+app.use(verifyJWT)
 
-const auth = require('./middleware/auth')
+app.use('/createServer', serverRoute)
+app.use('/addChannel', channelRoute)
+app.use('/joinServer', joinServerRoute)
 
-app.post('/welcome', auth, (req,res)=>{    
-    res.send('welcome')
-})
+// io.on("connection", socket => {
+//   socket.emit("your id", socket.id);
+//   socket.on("send message", body => {
+//       io.emit("message", body)
+//   })
+// })
 
-//Register
-app.post('/signup', async (req, res)=>{
-    try{
-        console.log("entered")
-        //get user input
-        const {username, email, password } = req.body;
+const { API_PORT } = process.env;
+const port = process.env.PORT || API_PORT;
 
-        //validate user input
-        if(!(username&&email&&password)){
-            res.status(400).send("All input is required");
-        }
-
-        //check if the user already exists
-        //validate if user exist in our database
-        const oldUser = await User.findOne({email});
-
-        //encrypt user password
-        encryptedPassword = await bcrypt.hash(password,10);
-
-        //create user in our database
-        const user = await User.create({
-            username,
-            email: email.toLowerCase(),
-            password: encryptedPassword,
-        })
-
-        //create token
-        const token = jwt.sign(
-            { user_id: user._id, email },
-            process.env.TOKEN_KEY,
-            {
-                expiresIn: "2h",
-            }
-        );
-
-        //save user token
-        user.token = token;
-        
-        //return new user
-        res.status(201).json(user);
-    } catch(err){
-        console.log(err);
-    }
-})
-
-//Login
-app.post('/signin', async (req,res)=>{
-    try{
-        console.log('entered login')
-        //get user input
-        const { email,password } = req.body;
-
-        //validate user input
-        if(!(email&&password)){
-            res.status(400).send("All input is required");
-        }
-
-        //validate if user exist in our database
-        const user = await User.findOne({email});
-
-        if(user&&(await bcrypt.compare(password, user.password))){
-            //Create token
-            const token = jwt.sign(
-                {
-                    user_id: user._id, 
-                    email
-                },
-                process.env.TOKEN_KEY,
-                {
-                    expiresIn: "2h",
-                }
-            );
-
-            user.token = token;
-
-            res.setHeader('Content-Type', 'application/json');
-            res.status(200).json(user);
-        }
-        else{
-            res.status(400).send("Invalid Credentials");
-        }
-    } catch (err){
-        console.log(err);
-    }
-})
+server.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});
 
 module.exports = app;
