@@ -2,9 +2,12 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const serverSchema = new mongoose.Schema({
-    server_name: String,
-    channels: [{
+    server_name:{
         type: String
+    },
+    channels: [{
+        type: Schema.Types.ObjectId,
+        ref: 'chat'
     }],
     user: [{
         type: String

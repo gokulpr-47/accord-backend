@@ -36,6 +36,7 @@ const refreshRoute = require('./routes/refresh')
 const serverRoute = require('./routes/api/server')
 const channelRoute = require('./routes/channel')
 const joinServerRoute = require('./routes/joinServer')
+const homeRoute = require('./routes/home')
 
 app.use('/signin', userRoute)
 app.use('/signup', registerRoute)
@@ -46,6 +47,7 @@ app.use(verifyJWT)
 app.use('/createServer', serverRoute)
 app.use('/addChannel', channelRoute)
 app.use('/joinServer', joinServerRoute)
+app.use('/home', homeRoute)
 
 // io.on("connection", socket => {
 //   socket.emit("your id", socket.id);

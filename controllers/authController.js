@@ -10,8 +10,8 @@ const handleLogin = async (req, res) => {
     if (!email || !password) return res.status(400).json({ 'message': 'email and password are required.' });
 
     const user = await User.findOne({ email }).exec();
-
-    const dbserver = await server.findOne({user: user.id}).exec();
+    
+    // const dbserver = await server.findOne({user: user._id}).exec();
     
     if (!user) return res.sendStatus(401); //Unauthorized 
     // evaluate password 

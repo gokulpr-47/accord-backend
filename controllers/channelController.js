@@ -4,6 +4,10 @@ const server = require('../model/server')
 
 const addChannel = async (req,res) => {
     const { channel_name, chats, id, email } = req.body;
+
+    const dbserver = await server.findOne({"_id": id}).exec();
+    console.log('channelController.js : ', dbserver)
+
     try{
         const result = await dbchats.create({
             "channel_name": channel_name,
@@ -11,11 +15,15 @@ const addChannel = async (req,res) => {
             "server_id": id
         })
 
+        const prevChannels = dbserver.channels
+        dbserver.channels = [...prevChannels, result.id]
+        const save = await dbserver.save();
+        console.log('save channels: ', save)
+
         res.status(201).json({
             result,
             message: 'Channel Created'
         })
-        // console.log(result)
     } catch (err){
         console.log(err)
     }

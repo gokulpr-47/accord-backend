@@ -3,7 +3,7 @@ const Schema = mongoose.Schema
 
 const chatSchema = new mongoose.Schema({
     channel_name: {
-        type: String
+        type: String,
     },
     chats:[{
         name: String,
