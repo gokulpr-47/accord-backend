@@ -24,7 +24,8 @@ const handleAddServer = async (req,res) => {
 
 const handleGetServer = async (req,res) => {
     try{ 
-        const user = await User.findOne({ 'email': req.query.email}).exec();
+        console.log('entered getServer')
+        const user = await User.findOne({ 'email': req.query.email }).exec();
         const dbserver = await Server.find({user: user.id}, { "user": 0, "__v": 0 }).populate('channels', { "server_id": 0 });
         res.setHeader('Content-Type', 'application/json')
         res.status(200).json({dbserver})
@@ -33,4 +34,16 @@ const handleGetServer = async (req,res) => {
     }
 }
 
-module.exports = { handleAddServer, handleGetServer }   
+const handleGetServerId = async (req,res) => {
+    try{ 
+        console.log('entered getServerId')
+        const user = await User.findOne({ 'email': req.query.email }).exec();
+        const dbserver = await Server.find({user: user.id}, { "user": 0, "__v": 0 }).populate('channels', { "server_id": 0 });
+        res.setHeader('Content-Type', 'application/json')
+        res.status(200).json({dbserver})
+    } catch(err){
+        res.status(500).json({'message': err.message})
+    }
+}
+
+module.exports = { handleAddServer, handleGetServer, handleGetServerId }
