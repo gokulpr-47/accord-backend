@@ -18,4 +18,8 @@ const addHome = async (req,res) => {
     });
 }
 
-module.exports = { addHome }
+const getHome = async (req,res)=>{
+    res.staus(201).json({message: 'success'})
+}
+
+module.exports = { addHome, getHome }

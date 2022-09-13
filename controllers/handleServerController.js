@@ -37,8 +37,11 @@ const handleGetServer = async (req,res) => {
 const handleGetServerId = async (req,res) => {
     try{ 
         console.log('entered getServerId')
+        // console.log('params: ',req.params.server_id)
         const user = await User.findOne({ 'email': req.query.email }).exec();
-        const dbserver = await Server.find({user: user.id}, { "user": 0, "__v": 0 }).populate('channels', { "server_id": 0 });
+        console.log("user id: ", user.id)
+        const dbserver = await Server.find({ user: user.id}, { "user": 0, "__v": 0 }).populate('channels', { "server_id": 0 });
+        console.log(dbserver)
         res.setHeader('Content-Type', 'application/json')
         res.status(200).json({dbserver})
     } catch(err){

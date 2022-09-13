@@ -3,6 +3,7 @@ const User = require('../model/User');
 const server = require('../model/server')
 
 const addChannel = async (req,res) => {
+    console.log('entered add channel')
     const { channel_name, chats, id, email } = req.body;
 
     const dbserver = await server.findOne({"_id": id}).exec();
