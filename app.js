@@ -8,8 +8,21 @@ const app = express();
 const server = http.createServer(app);
 const io = socket(server)
 const cookieParser = require('cookie-parser');
-const credentials = require('./middleware/credentials');
+// const credentials = require('./middleware/credentials');
 const verifyJWT = require('./middleware/verifyJWT');
+
+//routes
+const userRoute = require('./routes/user')
+const registerRoute = require('./routes/register')
+const logoutRoute = require('./routes/logout')
+const refreshRoute = require('./routes/refresh')
+const serverRoute = require('./routes/api/server')
+const channelRoute = require('./routes/channel')
+const joinServerRoute = require('./routes/joinServer')
+
+// const homeRoute = require('./routes/home')
+// const conversationRoute = require('./routes/conversation');
+// const router = require('./routes/api/server');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -19,24 +32,15 @@ app.use(cookieParser());
 
 // Handle options credentials check - before CORS!
 // and fetch cookies credentials requirement
-app.use(credentials);
+// app.use(credentials);
 
 app.use(
     cors({
       origin: ["http://localhost:3000"],
       credentials: true,
-      methods: ["GET", "POST"],
+      methods: ["GET", "POST", "DELETE"],
     })
 );
-  
-const userRoute = require('./routes/user')
-const registerRoute = require('./routes/register')
-const logoutRoute = require('./routes/logout')
-const refreshRoute = require('./routes/refresh')
-const serverRoute = require('./routes/api/server')
-const channelRoute = require('./routes/channel')
-const joinServerRoute = require('./routes/joinServer')
-const homeRoute = require('./routes/home')
 
 app.use('/signin', userRoute)
 app.use('/signup', registerRoute)
@@ -47,14 +51,11 @@ app.use(verifyJWT)
 app.use('/createServer', serverRoute)
 app.use('/addChannel', channelRoute)
 app.use('/joinServer', joinServerRoute)
-app.use('/home', homeRoute)
+// app.use('/home', homeRoute)
+app.use('/conversation', require('./routes/conversation'))
 
-// io.on("connection", socket => {
-//   socket.emit("your id", socket.id);
-//   socket.on("send message", body => {
-//       io.emit("message", body)
-//   })
-// })
+app.use('/newpost', require('./routes/newpost'))
+app.use('/message', require('./routes/message'))
 
 const { API_PORT } = process.env;
 const port = process.env.PORT || API_PORT;

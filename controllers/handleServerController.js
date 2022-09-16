@@ -1,3 +1,4 @@
+const chats = require('../model/chats');
 const Server = require('../model/server')
 const User = require('../model/User');
 
@@ -41,7 +42,7 @@ const handleGetServerId = async (req,res) => {
         const user = await User.findOne({ 'email': req.query.email }).exec();
         console.log("user id: ", user.id)
         const dbserver = await Server.find({ user: user.id}, { "user": 0, "__v": 0 }).populate('channels', { "server_id": 0 });
-        console.log(dbserver)
+        console.log('dbserver: ',dbserver)
         res.setHeader('Content-Type', 'application/json')
         res.status(200).json({dbserver})
     } catch(err){
@@ -49,4 +50,14 @@ const handleGetServerId = async (req,res) => {
     }
 }
 
-module.exports = { handleAddServer, handleGetServer, handleGetServerId }
+const deleteServer = async (req,res) => {
+    try {
+        await Server.deleteOne( {"_id": req.query.server_id})
+        await chats.deleteMany({ "server_id": req.query.server_id})
+        res.status(200).json({"message": 'deleted'})
+    } catch(err){
+        console.log(err)
+    }
+}
+
+module.exports = { handleAddServer, handleGetServer, handleGetServerId, deleteServer }

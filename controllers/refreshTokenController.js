@@ -82,6 +82,7 @@ const handleRefreshToken = async (req, res) => {
     const newRefreshTokenArray = foundUser.refreshToken.filter(rt => rt !== refreshToken);
     const email = foundUser.email
     const user = foundUser.username
+    const userId = foundUser._id
 
     // evaluate jwt 
     jwt.verify(
@@ -104,7 +105,7 @@ const handleRefreshToken = async (req, res) => {
                     }
                 },
                 process.env.ACCESS_TOKEN_SECRET,
-                { expiresIn: '10s' }
+                { expiresIn: '1h' }
             );
  
             const newRefreshToken = jwt.sign(
@@ -121,7 +122,7 @@ const handleRefreshToken = async (req, res) => {
             // Creates Secure Cookie with refresh token
             res.cookie('jwt', newRefreshToken, { httpOnly: true, secure: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 });
 
-            res.json({ email, user, accessToken })
+            res.json({ email, user, accessToken, userId })
         }
     );
 }

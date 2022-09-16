@@ -16,3 +16,25 @@ Content-Type: application/json
     "email": "gokulpr47@gmail.com",
     "password": "23416823"
 }
+
+###
+POST http://localhost:3001/conversation
+Content-Type: application/json
+
+{
+    "channelId": "6318fdc8a10dff1672daa79d",
+    "senderId": "6318f233d58d59d2b6f1a409"
+}
+
+###
+POST http://localhost:3001/createServer
+Content-Type: application/json
+
+{
+    "roomName": "new room",
+    "email": "me@gmail.com"
+}
+
+###
+POST  http://localhost:3001/newpost
+Content-Type: application/json
