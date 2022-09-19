@@ -20,8 +20,6 @@ const handleNewUser = async (req, res) => {
             "email": email.toLowerCase()
         });
 
-        console.log(result);
-
         res.status(201).json({
             result,
             message: 'successfully authenticated',

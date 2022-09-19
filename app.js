@@ -3,13 +3,20 @@ const express = require('express')
 require('dotenv').config();
 require('./config/database').connect();
 const cors = require("cors");
-const socket = require('socket.io')
+const { Server } = require('socket.io')
 const app = express();
 const server = http.createServer(app);
-const io = socket(server)
 const cookieParser = require('cookie-parser');
 // const credentials = require('./middleware/credentials');
 const verifyJWT = require('./middleware/verifyJWT');
+
+const io = new Server(server, {
+  cors: {
+    origin: ["http://localhost:3000"],
+    credentials: true,
+    methods: ["GET", "POST"],
+  }
+})
 
 //routes
 const userRoute = require('./routes/user')
@@ -57,11 +64,24 @@ app.use('/conversation', require('./routes/conversation'))
 app.use('/newpost', require('./routes/newpost'))
 app.use('/message', require('./routes/message'))
 
+io.on("connection", (socket) => {
+
+  socket.on("join_room", (data)=>{
+    console.log('joinroom: ',data)
+    socket.join(data)
+  })
+  
+  socket.on("send_message", (data)=>{ 
+    console.log('send message: ',data)
+    socket.to(data.channelId).emit("receive_message", data)
+  })
+})
+
 const { API_PORT } = process.env;
 const port = process.env.PORT || API_PORT;
 
 server.listen(port, () => {
   console.log(`Server running on port ${port}`);
-});
+})
 
 module.exports = app;

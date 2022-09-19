@@ -13,7 +13,6 @@ const handleAddServer = async (req,res) => {
             "server_name": roomName,
             "user": [user._id]
         });
-        console.log('result: ',result)
         res.status(201).json({
             result,
             message: 'successfully created'
@@ -25,7 +24,6 @@ const handleAddServer = async (req,res) => {
 
 const handleGetServer = async (req,res) => {
     try{ 
-        console.log('entered getServer')
         const user = await User.findOne({ 'email': req.query.email }).exec();
         const dbserver = await Server.find({user: user.id}, { "user": 0, "__v": 0 }).populate('channels', { "server_id": 0 });
         res.setHeader('Content-Type', 'application/json')
@@ -37,12 +35,8 @@ const handleGetServer = async (req,res) => {
 
 const handleGetServerId = async (req,res) => {
     try{ 
-        console.log('entered getServerId')
-        // console.log('params: ',req.params.server_id)
         const user = await User.findOne({ 'email': req.query.email }).exec();
-        console.log("user id: ", user.id)
         const dbserver = await Server.find({ user: user.id}, { "user": 0, "__v": 0 }).populate('channels', { "server_id": 0 });
-        console.log('dbserver: ',dbserver)
         res.setHeader('Content-Type', 'application/json')
         res.status(200).json({dbserver})
     } catch(err){

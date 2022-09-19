@@ -4,7 +4,6 @@ const chats = require('../model/chats')
 //new conversation
 const newConversation = async (req,res) => {
     const { channelId, senderId } = req.body;
-    console.log('entered newConversation')
     try{
         const savedConversation = await conversation.create({
             members: [channelId, senderId]
