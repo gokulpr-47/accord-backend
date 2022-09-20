@@ -4,7 +4,7 @@ const handleServerController = require('../../controllers/handleServerController
 
 router.post('/', handleServerController.handleAddServer);
 router.get('/', handleServerController.handleGetServer)
-router.get('/:server_id/:initParam', handleServerController.handleGetServerId)
+router.get('/:server_id', handleServerController.handleGetServerId)
 router.delete('/', handleServerController.deleteServer)
 
 // router.route('/')
