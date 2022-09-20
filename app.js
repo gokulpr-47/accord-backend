@@ -64,6 +64,10 @@ app.use('/conversation', require('./routes/conversation'))
 app.use('/newpost', require('./routes/newpost'))
 app.use('/message', require('./routes/message'))
 
+app.get('/test', (req,res)=>{
+  res.send('testing successful')
+})
+
 io.on("connection", (socket) => {
 
   socket.on("join_room", (data)=>{
