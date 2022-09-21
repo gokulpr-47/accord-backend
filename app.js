@@ -64,8 +64,13 @@ app.use('/conversation', require('./routes/conversation'))
 app.use('/newpost', require('./routes/newpost'))
 app.use('/message', require('./routes/message'))
 
-app.get('/test', (req,res)=>{
+app.get('/', (req,res)=>{
   res.send('testing successful')
+})
+
+app.get('/favicon.ico', function(req, res) {
+  res.writeHead(204);
+  res.end();
 })
 
 io.on("connection", (socket) => {
