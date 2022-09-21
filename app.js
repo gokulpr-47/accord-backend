@@ -7,7 +7,7 @@ const { Server } = require('socket.io')
 const app = express();
 const server = http.createServer(app);
 const cookieParser = require('cookie-parser');
-// const credentials = require('./middleware/credentials');
+const credentials = require('./middleware/credentials');
 const verifyJWT = require('./middleware/verifyJWT');
 
 const io = new Server(server, {
@@ -39,7 +39,7 @@ app.use(cookieParser());
 
 // Handle options credentials check - before CORS!
 // and fetch cookies credentials requirement
-// app.use(credentials);
+app.use(credentials);
 
 app.use(
     cors({
