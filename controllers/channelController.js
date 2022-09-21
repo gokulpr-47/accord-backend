@@ -1,5 +1,5 @@
 const dbchats = require('../model/chats')
-const User = require('../model/User');
+const User = require('../model/user');
 const server = require('../model/server')
 
 const addChannel = async (req,res) => {
