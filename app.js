@@ -7,12 +7,12 @@ const { Server } = require('socket.io')
 const app = express();
 const server = http.createServer(app);
 const cookieParser = require('cookie-parser');
-const credentials = require('./middleware/credentials');
+// const credentials = require('./middleware/credentials');
 const verifyJWT = require('./middleware/verifyJWT');
 
 const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:3000", "https://acccord.netlify.app/"],
+    origin: ["http://localhost:3000", "https://acccord.netlify.app"],
     credentials: true,
     methods: ["GET", "POST"],
   }
@@ -39,11 +39,11 @@ app.use(cookieParser());
 
 // Handle options credentials check - before CORS!
 // and fetch cookies credentials requirement
-app.use(credentials);
+// app.use(credentials);
 
 app.use(
     cors({
-      origin: ["http://localhost:3000", "https://acccord.netlify.app/"],
+      origin: ["http://localhost:3000", "https://acccord.netlify.app"],
       credentials: true,
       methods: ["GET", "POST", "DELETE"],
     })
