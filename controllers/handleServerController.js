@@ -1,6 +1,6 @@
 const chats = require('../model/chats');
 const Server = require('../model/server')
-const User = require('../model/User');
+const User = require('../model/user');
 
 const handleAddServer = async (req,res) => {
     const { roomName, email } = req.body;

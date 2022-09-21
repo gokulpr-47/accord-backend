@@ -1,5 +1,5 @@
 const server = require('../model/server')
-const User = require('../model/User');
+const User = require('../model/user');
 
 const joinServer = async (req, res) => {
     const { code, email } = req.body;

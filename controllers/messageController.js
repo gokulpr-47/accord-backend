@@ -1,5 +1,5 @@
 const message = require('../model/message')
-const User = require('../model/User')
+const User = require('../model/user')
 
 //add message(post)
 const addMessage = async (req,res) => {
