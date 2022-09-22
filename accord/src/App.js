@@ -27,9 +27,9 @@ export default function App(){
                             <Route path='/signup' element={<Signup/>} />
 
                             <Route element={<PersistLogin/>}>   
-                                <Route path='channels' element={<Chat socket={socket}/>} />
-                                <Route path='channels/:serverId' element={<Chat socket={socket}/>} />
-                                <Route path='channels/:serverId/:channelId' element={<Chat socket={socket}/>} />
+                                <Route path='/' element={<Chat socket={socket}/>} />
+                                <Route path='/:serverId' element={<Chat socket={socket}/>} />
+                                <Route path='/:serverId/:channelId' element={<Chat socket={socket}/>} />
                             </Route>
                         </Routes>
                     </UserContext.Provider>
