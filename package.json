@@ -7,7 +7,8 @@
     "node": "16.14.0"
   },
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix accord && npm run build --prefix accord"
   },
   "keywords": [],
   "author": "",
