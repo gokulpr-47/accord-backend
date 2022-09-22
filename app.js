@@ -7,11 +7,12 @@ const { Server } = require('socket.io')
 const app = express();
 const server = http.createServer(app);
 const cookieParser = require('cookie-parser');
+// const credentials = require('./middleware/credentials');
 const verifyJWT = require('./middleware/verifyJWT');
 
 const io = new Server(server, {
   cors: {
-    origin: ["https://acccord.netlify.app", "http://localhost:3000"],
+    origin: ["http://localhost:3000", "https://acccord.netlify.app"],
     credentials: true,
     methods: ["GET", "POST"],
   }
@@ -84,14 +85,6 @@ io.on("connection", (socket) => {
     socket.to(data.channelId).emit("receive_message", data)
   })
 })
-
-if(process.env.NODE_ENV == "production"){
-  app.use(express.static("accord/build"));
-  const path = require("path");
-  app.get("*",(req,res)=>{
-    res.sendFile(path.resolve(__dirname,'accord','build','index.html'))
-  })
-}
 
 const { API_PORT } = process.env;
 const port = process.env.PORT || API_PORT;
