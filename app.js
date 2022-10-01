@@ -74,15 +74,19 @@ app.get('/favicon.ico', function(req, res) {
 })
 
 io.on("connection", (socket) => {
-
+  
   socket.on("join_room", (data)=>{
-    console.log('joinroom: ',data)
     socket.join(data)
+    let users = io.sockets.adapter.rooms.get(data);
+    io.in(data).emit("active_user",users.size)
   })
   
   socket.on("send_message", (data)=>{ 
-    console.log('send message: ',data)
     socket.to(data.channelId).emit("receive_message", data)
+  })
+
+  socket.on("disconnect", ()=>{
+    console.log('user disconnected')
   })
 })
 
