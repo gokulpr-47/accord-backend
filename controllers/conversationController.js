@@ -1,8 +1,8 @@
-const conversation = require('../model/conversation')
-const chats = require('../model/chats')
+import conversation from '../model/conversation.js';
+import chats from '../model/chats.js';
 
 //new conversation
-const newConversation = async (req,res) => {
+async function newConversation (req,res){
     const { channelId, senderId } = req.body;
     try{
         const savedConversation = await conversation.create({
@@ -17,7 +17,7 @@ const newConversation = async (req,res) => {
 //get conv of a user
 //:channelId
 
-const getConversation = async (req,res) => {
+async function getConversation (req,res) {
     try{
         const convo = await conversation.find({ members: req.query.channelId})
         res.status(200).json(convo)        
@@ -27,4 +27,4 @@ const getConversation = async (req,res) => {
 }
 
 
-module.exports = { newConversation, getConversation }
+export default { newConversation, getConversation }

@@ -1,15 +1,15 @@
-const chats = require('../model/chats');
-const Server = require('../model/server')
-const User = require('../model/user');
+import chats from '../model/chats.js';
+import server from '../model/server.js';
+import User from '../model/user.js';
 
-const handleAddServer = async (req,res) => {
+export async function handleAddServer (req,res) {
     const { roomName, email } = req.body;
     
     if(!roomName) return res.status(400).json({ 'message': 'server name is required'})
     
     const user = await User.findOne({'email': email}).exec();
     try{
-        const result = await Server.create({
+        const result = await server.create({
             "server_name": roomName,
             "user": [user._id]
         });
@@ -22,10 +22,10 @@ const handleAddServer = async (req,res) => {
     }
 }
 
-const handleGetServer = async (req,res) => {
+export async function handleGetServer(req,res){
     try{ 
         const user = await User.findOne({ 'email': req.query.email }).exec();
-        const dbserver = await Server.find({user: user.id}, { "user": 0, "__v": 0 }).populate('channels', { "server_id": 0 });
+        const dbserver = await server.find({user: user.id}, { "user": 0, "__v": 0 }).populate('channels', { "server_id": 0 });
         res.setHeader('Content-Type', 'application/json')
         console.log(dbserver)
         res.status(200).json({dbserver})
@@ -46,7 +46,7 @@ const handleGetServer = async (req,res) => {
 //     }
 // }
 
-const handleGetServerId = async (req,res) => {
+export async function handleGetServerId (req,res) {
     try{ 
         const user = await User.findOne({ 'email': req.query.email }).exec();
         const channels = await chats.find({'server_id': req.params.server_id}, {"__v": 0, "server_id": 0})
@@ -58,9 +58,9 @@ const handleGetServerId = async (req,res) => {
     }
 }
 
-const deleteServer = async (req,res) => {
+export async function deleteServer (req,res) {
     try {
-        await Server.deleteOne( {"_id": req.query.server_id})
+        await server.deleteOne( {"_id": req.query.server_id})
         await chats.deleteMany({ "server_id": req.query.server_id})
         res.status(200).json({"message": 'deleted'})
     } catch(err){
@@ -68,4 +68,4 @@ const deleteServer = async (req,res) => {
     }
 }
 
-module.exports = { handleAddServer, handleGetServer, handleGetServerId, deleteServer }
+// export default { handleAddServer, handleGetServer, handleGetServerId, deleteServer }

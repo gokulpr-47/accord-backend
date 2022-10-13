@@ -1,13 +1,13 @@
-const User = require('../model/user');
-const home = require('../model/home')
+import { findOne } from '../model/user.js';
+import { create } from '../model/home.js';
 
 const addHome = async (req,res) => {
     const { email } = req.body;
     
-    const user = await User.findOne({email}).exec();
+    const user = await findOne({email}).exec();
 
     try{
-        const result = home.create({
+        const result = create({
             "owner": user._id
         })
     } catch (err){
@@ -22,4 +22,4 @@ const getHome = async (req,res)=>{
     res.staus(201).json({message: 'success'})
 }
 
-module.exports = { addHome, getHome }
+export default { addHome, getHome }

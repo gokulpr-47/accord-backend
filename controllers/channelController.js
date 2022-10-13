@@ -1,14 +1,14 @@
-const dbchats = require('../model/chats')
-const User = require('../model/user');
-const server = require('../model/server')
+import chat from '../model/chats.js';
+// import User from '../model/user.js';
+import server from '../model/server.js';
 
-const addChannel = async (req,res) => {
+export async function addChannel (req,res){
     const { channel_name, chats, id, email } = req.body;
 
     const dbserver = await server.findOne({"_id": id}).exec();
 
     try{
-        const result = await dbchats.create({
+        const result = await chat.create({
             "channel_name": channel_name,
             "chats": chats,
             "server_id": id
@@ -28,13 +28,13 @@ const addChannel = async (req,res) => {
     }
 }
 
-const getChannel = async (req,res) => {
+export async function getChannel (req,res) {
     try{
-        const channels = await dbchats.find({'server_id': req.query.server_id}, {"_id": 0, "server_id": 0, "__v": 0}).exec();
+        const channels = await chat.find({'server_id': req.query.server_id}, {"_id": 0, "server_id": 0, "__v": 0}).exec();
         res.status(200).send({channels})
     } catch(err) {
         res.status(500).json({'message': err.message})
     }
 }
 
-module.exports = { addChannel, getChannel }
+// export default { addChannel, getChannel }

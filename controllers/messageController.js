@@ -1,15 +1,15 @@
-const message = require('../model/message')
-const User = require('../model/user')
+import message from '../model/message.js'
+import user from '../model/user.js'
 
 //add message(post)
 const addMessage = async (req,res) => {
     try {
         let {channelId, senderId, chat} = req.body
-        const findUser = await User.findOne({"_id": senderId}).exec()
+        const findUser = await user.findOne({"_id": senderId}).exec()
         const savedMessage = await message.create({
             "channelId": channelId,
             "senderId": senderId,
-            "chat": chat,
+            "chat": chat,   
             "senderName": findUser.username
         })
         res.status(200).json(savedMessage);
@@ -30,4 +30,4 @@ const getMessage = async (req,res) => {
     }
 }
 
-module.exports = { addMessage, getMessage }
+export default { addMessage, getMessage }

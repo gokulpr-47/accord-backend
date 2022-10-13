@@ -1,6 +1,6 @@
-const mongoose = require("mongoose")
+import { Schema, model } from "mongoose"
 
-const messageSchema = new mongoose.Schema(
+const messageSchema = new Schema(
     {
         channelId: { //channel id
             type: String,
@@ -18,4 +18,4 @@ const messageSchema = new mongoose.Schema(
     { timestamps: true }
 )
 
-module.exports = mongoose.model("message", messageSchema)
+export default model("message", messageSchema)

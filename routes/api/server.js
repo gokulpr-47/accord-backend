@@ -1,11 +1,11 @@
-const express = require('express');
-const router = express.Router();
-const handleServerController = require('../../controllers/handleServerController');
+import { Router } from 'express';
+const router = Router();
+import { handleAddServer, handleGetServer, handleGetServerId, deleteServer } from '../../controllers/handleServerController.js';
 
-router.post('/', handleServerController.handleAddServer);
-router.get('/', handleServerController.handleGetServer)
-router.get('/:server_id', handleServerController.handleGetServerId)
-router.delete('/', handleServerController.deleteServer)
+router.post('/', handleAddServer);
+router.get('/', handleGetServer)
+router.get('/:server_id', handleGetServerId)
+router.delete('/', deleteServer)
 
 // router.route('/')
 //     .post(handleServerController.handleAddServer)
@@ -13,5 +13,5 @@ router.delete('/', handleServerController.deleteServer)
 // router.route('/:email')
 //     .get(handleServerController.handleGetServer)
 
-module.exports = router;     
+export default router;     
 

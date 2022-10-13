@@ -1,7 +1,8 @@
-const User = require('../model/user');
-const server = require('../model/server')
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+import User from '../model/user.js';
+import server from '../model/server.js';
+import { compare } from 'bcrypt';
+import jwt from 'jsonwebtoken';
+const {sign} = jwt
 
 const handleLogin = async (req, res) => {
     const cookies = req.cookies;
@@ -15,11 +16,11 @@ const handleLogin = async (req, res) => {
     
     if (!user) return res.sendStatus(401); //Unauthorized 
     // evaluate password 
-    const match = await bcrypt.compare(password, user.password);
+    const match = await compare(password, user.password);
     if (match) {
         // const roles = Object.values(user.roles).filter(Boolean); 
         // create JWTs
-        const accessToken = jwt.sign(
+        const accessToken = sign(
             {
                 "UserInfo": {
                     "username": user.username,
@@ -35,7 +36,7 @@ const handleLogin = async (req, res) => {
         //     { expiresIn: '10s' }
         // );
 
-        const newRefreshToken = jwt.sign(
+        const newRefreshToken = sign(
             { "username": user.username },
             process.env.REFRESH_TOKEN_SECRET,
             { expiresIn: '1d' }
@@ -87,4 +88,4 @@ const handleLogin = async (req, res) => {
     }
 }
 
-module.exports = { handleLogin };
+export default { handleLogin };

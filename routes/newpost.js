@@ -1,5 +1,5 @@
-const express = require('express');
-const router = express.Router();
+import { Router } from 'express';
+const router = Router();
 
 router.post('/', async (req,res)=>{
     try{
@@ -9,4 +9,4 @@ router.post('/', async (req,res)=>{
     }
 })
 
-module.exports = router
+export default router

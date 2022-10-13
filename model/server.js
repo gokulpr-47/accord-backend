@@ -1,7 +1,7 @@
-const mongoose = require('mongoose')
-const Schema = mongoose.Schema
+import { Schema as _Schema, model } from 'mongoose'
+const Schema = _Schema
 
-const serverSchema = new mongoose.Schema({
+const serverSchema = new _Schema({
     server_name:{
         type: String
     },
@@ -15,7 +15,7 @@ const serverSchema = new mongoose.Schema({
     id: String
 })
 
-module.exports = mongoose.model("server", serverSchema)
+export default model("server", serverSchema)
 
 // {
 //     from: "servers",

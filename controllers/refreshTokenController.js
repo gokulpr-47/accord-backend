@@ -1,59 +1,8 @@
-// const User = require('../model/User');
-// const jwt = require('jsonwebtoken');
+import User from '../model/user.js';
+import jwt from 'jsonwebtoken';
+const { verify, sign } = jwt;
 
-// const handleRefreshToken = async (req, res) => {
-//     const cookies = req.cookies;
-//     if (!cookies?.jwt) return res.sendStatus(401);
-//     const refreshToken = cookies.jwt;
-
-//     const foundUser = await User.findOne({ refreshToken }).exec();
-//     if (!foundUser) return res.sendStatus(403); //Forbidden 
-//     // evaluate jwt 
-//     jwt.verify(
-//         refreshToken,
-//         process.env.REFRESH_TOKEN_SECRET,
-//         async (err, decoded) => {
-//             if (err) {
-//                 // expired refresh token
-//                 foundUser.refreshToken = [...newRefreshTokenArray];
-//                 const result = await foundUser.save();
-//             }
-//             if (err || foundUser.username !== decoded.username) return res.sendStatus(403);
-//             const email = foundUser.email
-//             const accessToken = jwt.sign(
-//                 {
-//                     "UserInfo": {
-//                         "username": decoded.username,
-//                         email 
-//                     }
-//                 },
-//                 process.env.ACCESS_TOKEN_SECRET,
-//                 { expiresIn: '10s' }
-//             );
-            
-//             const newRefreshToken = jwt.sign(
-//                 { "username": foundUser.username },
-//                 process.env.REFRESH_TOKEN_SECRET,
-//                 { expiresIn: '15s' }
-//             );
-//             // Saving refreshToken with current user
-//             foundUser.refreshToken = [...newRefreshTokenArray, newRefreshToken];
-//             const result = await foundUser.save();
-
-//             // Creates Secure Cookie with refresh token
-//             res.cookie('jwt', newRefreshToken, { httpOnly: true, secure: true, sameSite: 'None', maxAge: 24 * 60 * 60 * 1000 });
-//             const user = foundUser.username
-//             res.json({ email, user, accessToken })
-//         }
-//     );
-// }
-
-// module.exports = { handleRefreshToken }
-
-const User = require('../model/user');
-const jwt = require('jsonwebtoken');
-
-const handleRefreshToken = async (req, res) => {
+export async function handleRefreshToken (req, res) {
     const cookies = req.cookies;
 
     if (!cookies?.jwt) return res.sendStatus(401);  
@@ -64,7 +13,7 @@ const handleRefreshToken = async (req, res) => {
 
     // Detected refresh token reuse!
     if (!foundUser) {
-        jwt.verify(
+        verify(
             refreshToken,
             process.env.REFRESH_TOKEN_SECRET,
             async (err, decoded) => {
@@ -85,7 +34,7 @@ const handleRefreshToken = async (req, res) => {
     const userId = foundUser._id
 
     // evaluate jwt 
-    jwt.verify(
+    verify(
         refreshToken,
         process.env.REFRESH_TOKEN_SECRET,
         async (err, decoded) => {
@@ -97,7 +46,7 @@ const handleRefreshToken = async (req, res) => {
             if (err || foundUser.username !== decoded.username) return res.sendStatus(403);
 
             // Refresh token was still valid
-            const accessToken = jwt.sign(
+            const accessToken = sign(
                 {
                     "UserInfo": {
                         "username": decoded.username,
@@ -108,7 +57,7 @@ const handleRefreshToken = async (req, res) => {
                 { expiresIn: '1h' }
             );
  
-            const newRefreshToken = jwt.sign(
+            const newRefreshToken = sign(
                 { "username": foundUser.username },
                 process.env.REFRESH_TOKEN_SECRET,
                 { expiresIn: '1d' }
@@ -127,4 +76,4 @@ const handleRefreshToken = async (req, res) => {
     );
 }
 
-module.exports = { handleRefreshToken }
+export default { handleRefreshToken }

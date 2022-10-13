@@ -1,7 +1,7 @@
-const express = require('express');
-const router = express.Router();
-const joinServerController = require('../controllers/joinServerController');
+import { Router } from 'express';
+const router = Router();
+import { joinServer } from '../controllers/joinServerController.js';
 
-router.post('/', joinServerController.joinServer)
+router.post('/', joinServer)
 
-module.exports = router;
+export default router;

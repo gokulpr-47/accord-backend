@@ -1,7 +1,7 @@
-const server = require('../model/server')
-const User = require('../model/user');
+import server from '../model/server.js';
+import User from '../model/user.js';
 
-const joinServer = async (req, res) => {
+export async function joinServer (req, res){
     const { code, email } = req.body;
 
     try{
@@ -24,4 +24,4 @@ const joinServer = async (req, res) => {
     }
 }
 
-module.exports = { joinServer }
+// export default { joinServer }

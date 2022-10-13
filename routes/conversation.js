@@ -1,8 +1,8 @@
-const express = require('express');
-const router = express.Router();
-const conversationController = require('../controllers/conversationController')
+import { Router } from 'express';
+const router = Router();
+import conversationController from '../controllers/conversationController.js';
 
 router.post('/', conversationController.newConversation)
 router.get('/:channelId', conversationController.getConversation);
 
-module.exports = router;
+export default router;

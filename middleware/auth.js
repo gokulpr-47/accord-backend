@@ -1,4 +1,4 @@
-const jwt = require("jsonwebtoken");
+import { verify } from "jsonwebtoken";
 
 const config = process.env;
 
@@ -10,7 +10,7 @@ const verifyToken = (req,res,next) => {
     }
 
     try{
-        const decoded = jwt.verify(token, config.TOKEN_KEY);
+        const decoded = verify(token, config.TOKEN_KEY);
         req.user = decoded;
     } catch (err) {
         return res.status(401).send("Invalid Token");
@@ -18,4 +18,4 @@ const verifyToken = (req,res,next) => {
     return next();
 }
 
-module.exports = verifyToken;   
+export default verifyToken;   

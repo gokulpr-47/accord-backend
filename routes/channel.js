@@ -1,8 +1,8 @@
-const express = require('express');
-const router = express.Router();
-const channelController = require('../controllers/channelController');
+import { Router } from 'express';
+const router = Router();
+import { addChannel, getChannel } from '../controllers/channelController.js';
 
-router.post('/', channelController.addChannel);
-router.get('/', channelController.getChannel)
+router.post('/', addChannel);
+router.get('/', getChannel)
 
-module.exports = router;
+export default router;
