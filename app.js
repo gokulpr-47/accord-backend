@@ -1,38 +1,42 @@
-const http = require('http');
-const express = require('express')
-require('dotenv').config();
-require('./config/database').connect();
-const cors = require("cors");
-const { Server } = require('socket.io')
+import { createServer } from 'http';
+import express, { json, urlencoded } from 'express';
+import dotenv from 'dotenv'
+dotenv.config()
+// require('./config/database').connect();
+import database from './config/database.js'
+database();
+import cors from "cors";
+import { Server } from 'socket.io';
 const app = express();
-const server = http.createServer(app);
-const cookieParser = require('cookie-parser');
+const server = createServer(app);
+import cookieParser from 'cookie-parser';
 // const credentials = require('./middleware/credentials');
-const verifyJWT = require('./middleware/verifyJWT');
+import verifyJWT from './middleware/verifyJWT.js';
 
 const io = new Server(server, {
   cors: {
-    origin: ["https://acccord.netlify.app", "http://localhost:3000" ],
+    origin: ["http://localhost:3000" ],
     credentials: true,
     methods: ["GET", "POST"],
   } 
 })
-
 //routes
-const userRoute = require('./routes/user')
-const registerRoute = require('./routes/register')
-const logoutRoute = require('./routes/logout')
-const refreshRoute = require('./routes/refresh')
-const serverRoute = require('./routes/api/server')
-const channelRoute = require('./routes/channel')
-const joinServerRoute = require('./routes/joinServer')
+import userRoute from './routes/user.js';
+import registerRoute from './routes/register.js';
+import logoutRoute from './routes/logout.js';
+import refreshRoute from './routes/refresh.js';
+import serverRoute from './routes/api/server.js';
+import channelRoute from './routes/channel.js';
+import joinServerRoute from './routes/joinServer.js';
+import conversationRoute from './routes/conversation.js'
+import newPostRoute from './routes/newpost.js'
+import messageRoute from './routes/message.js'
 
 // const homeRoute = require('./routes/home')
-// const conversationRoute = require('./routes/conversation');
 // const router = require('./routes/api/server');
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(json());
+app.use(urlencoded({ extended: true }));
 
 //middleware for cookies
 app.use(cookieParser());
@@ -43,7 +47,7 @@ app.use(cookieParser());
 
 app.use(
     cors({
-      origin: ["https://acccord.netlify.app", "http://localhost:3000" ],
+      origin: ["http://localhost:3000" ],
       credentials: true,
       methods: ["GET", "POST", "DELETE"],
     })
@@ -59,10 +63,10 @@ app.use('/createServer', serverRoute)
 app.use('/addChannel', channelRoute)
 app.use('/joinServer', joinServerRoute)
 // app.use('/home', homeRoute)
-app.use('/conversation', require('./routes/conversation'))
+app.use('/conversation', conversationRoute)
 
-app.use('/newpost', require('./routes/newpost'))
-app.use('/message', require('./routes/message'))
+app.use('/newpost', newPostRoute)
+app.use('/message', messageRoute)
 
 app.get('/', (req,res)=>{
   res.send('testing successful')
@@ -74,15 +78,33 @@ app.get('/favicon.ico', function(req, res) {
 })
 
 io.on("connection", (socket) => {
-
+  // console.log('connected: ', socket)
+  
   socket.on("join_room", (data)=>{
-    console.log('joinroom: ',data)
+    console.log('joinroom: ',data , socket.id)
     socket.join(data)
+    console.log(io.sockets.adapter.rooms.get(data))
+    let users = io.sockets.adapter.rooms.get(data);
+    console.log('users: ', users.size);
+    console.log('data: ', data)
+    io.in(data).emit("active_user",users.size)
+  })
+  
+  socket.on("leave_room", (roomId)=>{
+    console.log('entered leave room')
+    socket.leave(roomId); 
+    console.log(io.sockets.adapter.rooms.get(roomId))
+    let data = 'hello';
+    socket.to(roomId).emit('user_left', data)
   })
   
   socket.on("send_message", (data)=>{ 
     console.log('send message: ',data)
     socket.to(data.channelId).emit("receive_message", data)
+  })
+
+  socket.on("disconnect", (channelId)=>{
+    console.log('disconnected')
   })
 })
 
@@ -93,4 +115,4 @@ server.listen(port, () => {
   console.log(`Server running on port ${port}`);
 })
 
-module.exports = app;
+export default app;
