@@ -99,12 +99,11 @@ io.on("connection", (socket) => {
   })
   
   socket.on("send_message", (data)=>{ 
-    console.log('send message: ',data)
     socket.to(data.channelId).emit("receive_message", data)
   })
 
-  socket.on("disconnect", (channelId)=>{
-    console.log('disconnected')
+  socket.on("disconnect", ()=>{
+    console.log('user disconnected')
   })
 })
 
