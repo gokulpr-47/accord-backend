@@ -81,21 +81,15 @@ io.on("connection", (socket) => {
   // console.log('connected: ', socket)
   
   socket.on("join_room", (data)=>{
-    console.log('joinroom: ',data , socket.id)
     socket.join(data)
-    console.log(io.sockets.adapter.rooms.get(data))
     let users = io.sockets.adapter.rooms.get(data);
-    console.log('users: ', users.size);
-    console.log('data: ', data)
     io.in(data).emit("active_user",users.size)
   })
   
   socket.on("leave_room", (roomId)=>{
-    console.log('entered leave room')
-    socket.leave(roomId); 
-    console.log(io.sockets.adapter.rooms.get(roomId))
-    let data = 'hello';
-    socket.to(roomId).emit('user_left', data)
+    socket.leave(roomId);
+    let users = io.sockets.adapter.rooms.get(socket.id);
+    io.in(roomId).emit("active_user",users?.size)
   })
   
   socket.on("send_message", (data)=>{ 
