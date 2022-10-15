@@ -15,7 +15,7 @@ import verifyJWT from './middleware/verifyJWT.js';
 
 const io = new Server(server, {
   cors: {
-    origin: ["http://localhost:3000" ],
+    origin: ["https://acccord.netlify.app", "http://localhost:3000"],
     credentials: true,
     methods: ["GET", "POST"],
   } 
@@ -47,7 +47,7 @@ app.use(cookieParser());
 
 app.use(
     cors({
-      origin: ["http://localhost:3000" ],
+      origin: ["https://acccord.netlify.app", "http://localhost:3000" ],
       credentials: true,
       methods: ["GET", "POST", "DELETE"],
     })
