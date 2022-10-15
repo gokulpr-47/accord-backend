@@ -30,4 +30,4 @@ export async function handleNewUser(req, res) {
         }
 }
 
-// export default { handleNewUser };
+export default { handleNewUser };
