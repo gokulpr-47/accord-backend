@@ -8,7 +8,7 @@
     "node": "16.14.0"
   },
   "scripts": {
-    "start": "nodemon app.js",
+    "start": "app.js",
     "build": "webpack --mode production"
   },
   "keywords": [],
