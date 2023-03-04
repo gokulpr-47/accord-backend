@@ -2,7 +2,7 @@
   "name": "accord-backend",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "app.js",
   "type": "module",
   "engines": {
     "node": "16.14.0"
